@@ -81,18 +81,18 @@ $(function() {
     describe('Initial Entries', function () {
         /*
          * We expect the initial asynchronous call to loadFeed()
-         * to finish in less than a second.
+         * to finish in less than two second.
          */
         beforeEach(function (done) {
-            setTimeout(done, 1000);
+            setTimeout(done, 2000);
         });
 
         /*
          * A test that ensures that loadFeed function finishes in less than
-         * a second. It checks that there is at least a single .entry element
+         * two second. There should be at least one .entry element
          * within the .feed container.
          */
-        it('are loaded in less than 1 second', function (done) {
+        it('are loaded in less than 2 seconds', function (done) {
             expect($('.feed').find('.entry').length).not.toBe(0);
             done();
         });

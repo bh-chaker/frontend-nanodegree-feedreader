@@ -27,46 +27,99 @@ $(function() {
         });
 
 
-        /* TODO: Write a test that loops through each feed
-         * in the allFeeds object and ensures it has a URL defined
-         * and that the URL is not empty.
+        /* A test that loops through each feed
+         * in the allFeeds object and ensures it has a URL defined,
+         * that the URL is a string and that it is not empty.
          */
+        it('have URLs', function () {
+            allFeeds.forEach(function (feed) {
+                expect(feed['url']).toBeDefined();
+                expect(typeof feed['url']).toBe('string');
+                expect(feed['url']).not.toBe('');
+            });
+        });
 
-
-        /* TODO: Write a test that loops through each feed
-         * in the allFeeds object and ensures it has a name defined
-         * and that the name is not empty.
+        /* A test that loops through each feed
+         * in the allFeeds object and ensures it has a name defined,
+         * that the name is a string and that it is not empty.
          */
+        it('have names', function () {
+            allFeeds.forEach(function (feed) {
+                expect(feed['name']).toBeDefined();
+                expect(typeof feed['name']).toBe('string');
+                expect(feed['name']).not.toBe('');
+            });
+        });
     });
 
-
-    /* TODO: Write a new test suite named "The menu" */
-
-        /* TODO: Write a test that ensures the menu element is
-         * hidden by default. You'll have to analyze the HTML and
-         * the CSS to determine how we're performing the
-         * hiding/showing of the menu element.
+    /*
+     * Test suite for the visibility of the menu.
+     */
+    describe("The menu", function () {
+        /*
+         * A test that ensures the menu element is hidden by default.
          */
+        it("is hidden by default", function () {
+            expect($("body").hasClass("menu-hidden")).toBe(true);
+        });
 
-         /* TODO: Write a test that ensures the menu changes
-          * visibility when the menu icon is clicked. This test
-          * should have two expectations: does the menu display when
-          * clicked and does it hide when clicked again.
-          */
-
-    /* TODO: Write a new test suite named "Initial Entries" */
-
-        /* TODO: Write a test that ensures when the loadFeed
-         * function is called and completes its work, there is at least
-         * a single .entry element within the .feed container.
-         * Remember, loadFeed() is asynchronous so this test wil require
-         * the use of Jasmine's beforeEach and asynchronous done() function.
+        /* A test that ensures the menu changes visibility
+         * when the menu icon is clicked.
          */
+        it("changes visibility when clicked", function () {
+            $(".menu-icon-link").click();
+            expect($("body").hasClass("menu-hidden")).toBe(false);
 
-    /* TODO: Write a new test suite named "New Feed Selection"
+            $(".menu-icon-link").click();
+            expect($("body").hasClass("menu-hidden")).toBe(true);
+        });
+    });
 
-        /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
+    /*
+     * Test suite for initial entries
+     */
+    describe('Initial Entries', function () {
+        /*
+         * We expect the initial asynchronous call to loadFeed()
+         * to finish in less than a second.
          */
+        beforeEach(function (done) {
+            setTimeout(done, 1000);
+        });
+
+        /*
+         * A test that ensures that loadFeed function finishes in less than
+         * a second. It checks that there is at least a single .entry element
+         * within the .feed container.
+         */
+        it('are loaded in less than 1 second', function (done) {
+            expect($('.feed').find('.entry').length).not.toBe(0);
+            done();
+        });
+    });
+
+    /*
+     * Test suite for new feed selection
+     */
+    describe('New Feed Selection', function (){
+        var first_entry_before;
+
+        /*
+         * We save the first entry link from first feed, then we call
+         * the loadFeed to select the second feed.
+         */
+        beforeEach(function (done) {
+            first_entry_before = $('.entry-link:first').attr('href');
+            loadFeed(1, done);
+        });
+
+        /*
+         * A test to check that the first entry link has changed.
+         */
+        it('changes the first entry link', function (done) {
+            expect($('.entry-link:first').attr('href')).not.toBe(first_entry_before);
+            done();
+        });
+    });
+
 }());

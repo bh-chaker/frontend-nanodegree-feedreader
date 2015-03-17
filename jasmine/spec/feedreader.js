@@ -80,21 +80,19 @@ $(function() {
      */
     describe('Initial Entries', function () {
         /*
-         * We expect the initial asynchronous call to loadFeed()
-         * to finish in less than two second.
+         * We call loadFeed and pass the 'done' function as the 'cb' parameter.
          */
         beforeEach(function (done) {
-            setTimeout(done, 2000);
+            $('.feed').empty();
+            loadFeed(0, done);
         });
 
-        /*
-         * A test that ensures that loadFeed function finishes in less than
-         * two second. There should be at least one .entry element
-         * within the .feed container.
+        /* A test that ensures when the loadFeed
+         * function is called and completes its work, there is at least
+         * a single .entry element within the .feed container.
          */
-        it('are loaded in less than 2 seconds', function (done) {
+        it('are loaded', function () {
             expect($('.feed').find('.entry').length).not.toBe(0);
-            done();
         });
     });
 
@@ -105,20 +103,22 @@ $(function() {
         var first_entry_before;
 
         /*
-         * We save the first entry link from first feed, then we call
-         * the loadFeed to select the second feed.
+         * We load the first feed, save the first entry link,
+         * then load the second feed.
          */
         beforeEach(function (done) {
-            first_entry_before = $('.entry-link:first').attr('href');
-            loadFeed(1, done);
+            $('.feed').empty();
+            loadFeed(0, function (){
+                first_entry_before = $('.entry-link:first').attr('href');
+                loadFeed(1, done);
+            });
         });
 
         /*
          * A test to check that the first entry link has changed.
          */
-        it('changes the first entry link', function (done) {
+        it('changes the first entry link', function () {
             expect($('.entry-link:first').attr('href')).not.toBe(first_entry_before);
-            done();
         });
     });
 
